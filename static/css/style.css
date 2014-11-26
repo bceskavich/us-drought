@@ -1,0 +1,169 @@
+/* Universal Styling */
+
+html {
+  font-family: "Avenir", Arial, sans-serif;
+}
+
+.brown,
+a {
+  color: #5b2513;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Intro Landing */
+
+header {
+  height: 100vh;
+}
+
+#title,
+#intro {
+  width: 50%;
+  margin: 0px auto;
+}
+
+#title {
+  margin-top: 12.5%;
+}
+
+#title h1 {
+  font-size: 65px;
+  text-align: center;
+}
+
+#intro {
+  font-size: 19px;
+  padding-top: 50px;
+  text-align: center;
+}
+
+#intro p {
+  margin: 30px 0px;
+}
+
+#down {
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
+  text-align: center;
+  margin: 0px auto;
+  font-size: 50px;
+}
+
+/* Graph Section */
+
+section {
+  height: 100vh;
+}
+
+section > div {
+  float: left;
+}
+
+section div h1 {
+  text-align: center;
+  padding-top: 25px;
+}
+
+.choro-container {
+  width: 66.6667%;
+}
+
+#choro {
+  padding: 50px;
+  padding-top: 75px;
+}
+
+.choro-info {
+  width: 30%;
+  padding: 0px 20px;
+}
+
+.choro-info p {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: left;
+}
+
+button {
+  background-color: white;
+  color: #5b2513;
+  border: 1px solid #5b2513;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 10px 30px;
+  margin: 0px auto;
+}
+
+button:hover {
+  background-color: #5b2513;
+  color: white;
+}
+
+hr {
+  border: 1px solid #ddd;
+  margin: 40px 0px;
+}
+
+.select-area {
+  text-align: left;
+}
+
+.select-item {
+  padding: 10px;
+  padding-left: 0px;
+}
+
+#date-submit {
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  text-align: center;
+  color: white;
+}
+
+li {
+  padding: 5px 0px;
+  margin: 10px 0px;
+  border-radius: 5px;
+}
+
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+.none { fill: #e2b6a8; }
+.d0 { fill: #d3927d; }
+.d1 { fill: #c56d51; }
+.d2 { fill: #b64926; }
+.d3 { fill: #89371c; }
+.d4 { fill: #5b2513; }
+
+input {
+  width: 500px;
+}
+
+footer {
+  text-align: center;
+  font-size: 10px;
+  padding: 50px 0px;
+}
+
+footer p {
+  margin: 0px;
+  padding: 0px;
+}
