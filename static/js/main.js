@@ -6,8 +6,8 @@
 var file_name = 'county_20000104_web.csv';
 
 // Sets up scale, width, attributes, etc.
-var width = 960,
-  height = 600;
+var width = $(".choro-container").width() + 100,
+  height = 650;
 
 var droughtRate = d3.map();
 
@@ -23,7 +23,7 @@ var quantize = d3.scale.quantize()
   }));
 
 var projection = d3.geo.albersUsa()
-  .scale(1280)
+  .scale(width)
   .translate([width / 2, height / 2]);
 
 var path = d3.geo.path()
