@@ -4,10 +4,9 @@
 
 // Uses first file in dataset for initial rendering
 var file_name = 'county_20000104_web.csv';
-
 // Sets up scale, width, attributes, etc.
 var width = $(".choro-container").width() + 100,
-  height = 650;
+    height = 650;
 
 var droughtRate = d3.map();
 
@@ -60,10 +59,6 @@ function initiate(){
   }
 }
 
-/*
- * UPDATE FUNCTIONS
- */
-
 // Graph subsequently updated w/ update()
 function update(fileIndex){
   var file = files[fileIndex]
@@ -86,13 +81,9 @@ function update(fileIndex){
   }
 }
 
-function onFormClick(){
-  var date = $("#vizdate").val();
-  updateForSelectedDate(date);
-}
-
 // On user input, updates choropleth for closest date in the dataset
-function updateForSelectedDate(date){
+function updateForSelectedDate(){
+  var date = $("#vizdate").val();
   var splitDate = date.split("-");
   var date = splitDate[0] + splitDate[1] + splitDate[2];
 
