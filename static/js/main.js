@@ -132,18 +132,18 @@ function appendDate(fileIndex){
   var date = getDate(fileIndex);
 
   var month = date.month;
-  if (month == 01){var monthName = "January"};
-  if (month == 02){var monthName = "February"};
-  if (month == 03){var monthName = "March"};
-  if (month == 04){var monthName = "April"};
-  if (month == 05){var monthName = "May"};
-  if (month == 06){var monthName = "June"};
-  if (month == 07){var monthName = "July"};
-  if (month == 08){var monthName = "August"};
-  if (month == 09){var monthName = "September"};
-  if (month == 10){var monthName = "October"};
-  if (month == 11){var monthName = "November"};
-  if (month == 12){var monthName = "December"};
+  if (month == 01) var monthName = "January";
+  if (month == 02) var monthName = "February";
+  if (month == 03) var monthName = "March";
+  if (month == 04) var monthName = "April";
+  if (month == 05) var monthName = "May";
+  if (month == 06) var monthName = "June";
+  if (month == 07) var monthName = "July";
+  if (month == 08) var monthName = "August";
+  if (month == 09) var monthName = "September";
+  if (month == 10) var monthName = "October";
+  if (month == 11) var monthName = "November";
+  if (month == 12) var monthName = "December";
 
   var dateString = monthName + " " + date.day + ", " + date.year;
 
@@ -169,7 +169,7 @@ function getDate(fileIndex){
 }
 
 // 1 sec interval loop for choropleth, restarts when reaches end of data
-fileNumber = 1;
+var fileNumber = 1;
 function setLoop(value){
   if (value == "play"){
     interval = setInterval(function(){

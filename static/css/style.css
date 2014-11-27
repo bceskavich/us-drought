@@ -14,6 +14,10 @@ a {
   font-weight: bold;
 }
 
+a:hover {
+  text-decoration: underline;
+}
+
 /* Intro Landing */
 
 header {
@@ -159,11 +163,15 @@ input {
 
 footer {
   text-align: center;
-  font-size: 10px;
-  padding: 50px 0px;
+  font-size: 12px;
+  padding: 50px 30%;
 }
 
 footer p {
   margin: 0px;
   padding: 0px;
+}
+
+footer > p:last-child {
+  margin-top: 50px;
 }
