@@ -87,18 +87,14 @@ function update(fileIndex){
 }
 
 function onFormClick(){
-  var day = $("#day").val();
-  var month = $("#month").val();
-  var year = $("#year").val();
-
-  updateForSelectedDate(day, month, year);
+  var date = $("#vizdate").val();
+  updateForSelectedDate(date);
 }
 
 // On user input, updates choropleth for closest date in the dataset
-function updateForSelectedDate(day, month, year){
-  // Turns user inputted value into standardized integer val
-  var dateString = year + month + day;
-  var date = parseInt(dateString);
+function updateForSelectedDate(date){
+  var splitDate = date.split("-");
+  var date = splitDate[0] + splitDate[1] + splitDate[2];
 
   var file = files[0];
   var currDate = file.split("_")[1];
@@ -177,27 +173,28 @@ function setLoop(value){
         fileNumber = 0
       }
       update(fileNumber++);
-    }, 1000);
+    }, 750);
   }
   else {
     clearInterval(interval);
   }
 }
 
-// Initiates graph & loop upon page load
+// Document Ready
 $(function(){
   initiate();
+
   var height = $(window).height()
   $(window).scroll(function(){
     var scroll = $(document).scrollTop()
-    if (scroll < (height)){
+    if (scroll < height){
       if (typeof interval !== "undefined"){
         clearInterval(interval);
         $("#start").html("Play");
         $("#start").prop("value", "play");
       }
     }
-    if (scroll > (height)){
+    if (scroll > height) {
       if (typeof interval !== "undefined"){
         clearInterval(interval);
         $("#start").html("Pause");

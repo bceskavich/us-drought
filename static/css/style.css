@@ -94,10 +94,10 @@ section div h1 {
 }
 
 button {
-  background-color: white;
-  color: #5b2513;
-  border: 1px solid #5b2513;
-  border-radius: 5px;
+  background-color: #89371c;
+  border: 1px solid #89371c;
+  color: #fff;
+  border-radius: 4px;
   font-size: 20px;
   padding: 10px 30px;
   margin: 0px auto;
@@ -117,9 +117,8 @@ hr {
   text-align: left;
 }
 
-.select-item {
-  padding: 10px;
-  padding-left: 0px;
+#vizdate {
+  width: 50%;
 }
 
 #date-submit {
