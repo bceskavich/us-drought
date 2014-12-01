@@ -1,10 +1,7 @@
-/*
- * SETUP
- */
+// Setup
 
-// Uses first file in dataset for initial rendering
 var file_name = 'county_20000104_web.csv';
-// Sets up scale, width, attributes, etc.
+
 var width = $(".choro-container").width() + 100,
     height = 650;
 
@@ -69,8 +66,9 @@ function update(fileIndex){
     .await(ready);
 
   function ready(error, us) {
-    var svg = d3.select("#choro")
     appendDate(fileIndex);
+
+    var svg = d3.select("#choro")
     svg.select(".counties")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.counties).features)
@@ -116,9 +114,14 @@ function updateForSelectedDate(){
 
 // Appends date text as graph title upon change
 function appendDate(fileIndex){
-  var date = getDate(fileIndex);
+  var file = files[fileIndex];
+  var date = file.split("_")[1];
+  var splitDate = date.split("");
 
-  var month = date.month;
+  var year = splitDate[0] + splitDate[1] + splitDate[2] + splitDate[3];
+  var month = splitDate[4] + splitDate[5];
+  var day = splitDate[6] + splitDate[7];
+
   if (month == 01) var monthName = "January";
   if (month == 02) var monthName = "February";
   if (month == 03) var monthName = "March";
@@ -132,39 +135,29 @@ function appendDate(fileIndex){
   if (month == 11) var monthName = "November";
   if (month == 12) var monthName = "December";
 
-  var dateString = monthName + " " + date.day + ", " + date.year;
+  var dateString = monthName + " " + day + ", " + year;
 
   $("#choro-title").html(dateString);
 }
 
-// Gets date values from dataset file name
-// File name = count_YYYYMMDD.csv
-function getDate(fileIndex){
-  var file = files[fileIndex];
-  var date = file.split("_")[1];
-  var splitDate = date.split("");
-
-  var year = splitDate[0] + splitDate[1] + splitDate[2] + splitDate[3];
-  var month = splitDate[4] + splitDate[5];
-  var day = splitDate[6] + splitDate[7];
-
-  return {
-    year: year,
-    month: month,
-    day: day
-  };
-}
-
-// 1 sec interval loop for choropleth, restarts when reaches end of data
 var fileNumber = 1;
-function setLoop(value){
+var intervalCount = 750;
+var interval = null;
+
+function setLoop(value, count){
+  intervalCount = count;
+  var cycleTime = intervalCount / 1000;
+  $("#cycle-time").html(cycleTime);
+
+  if (interval) clearInterval(interval);
+
   if (value == "play"){
     interval = setInterval(function(){
       if (fileNumber >= 775){
         fileNumber = 0
       }
       update(fileNumber++);
-    }, 750);
+    }, count);
   }
   else {
     clearInterval(interval);
@@ -178,6 +171,7 @@ $(function(){
   var height = $(window).height()
   $(window).scroll(function(){
     var scroll = $(document).scrollTop()
+
     if (scroll < height){
       if (typeof interval !== "undefined"){
         clearInterval(interval);
@@ -185,13 +179,49 @@ $(function(){
         $("#start").prop("value", "play");
       }
     }
+
     if (scroll > height) {
       if (typeof interval !== "undefined"){
         clearInterval(interval);
         $("#start").html("Pause");
         $("#start").prop("value", "pause");
       }
-      setLoop("play");
+      setLoop("play", intervalCount);
+    }
+  });
+
+  $("#start").click(function(){
+    setLoop(this.value, intervalCount);
+
+    if (this.value == "pause"){
+      $("#start").html("Play");
+      $("#start").prop("value", "play");
+    }
+    else {
+      $("#start").html("Pause");
+      $("#start").prop("value", "pause");
+    }
+  });
+
+  $("#cycle-submit").click(function(){
+    setLoop("play", parseInt($('#cycle-time-select').val()));
+
+    if ($("#start").val() == "play") {
+      $("#start").html("Pause");
+      $("#start").prop("value", "pause");
+    }
+  });
+
+  $('a[href*=#]:not([href=#])').click(function() {
+    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+        $('html,body').animate({
+          scrollTop: target.offset().top
+        }, 1000);
+        return false;
+      }
     }
   });
 });

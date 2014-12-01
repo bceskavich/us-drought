@@ -59,6 +59,39 @@
 
           <hr />
 
+          <h3>Cycle Time - <span id="cycle-time"></span> seconds</h3>
+
+          <form>
+            <select id="cycle-time-select">
+              <option value="750">0.75 seconds</option>
+              <option value="1000">1 seconds</option>
+              <option value="1500">1.5 seconds</option>
+              <option value="2000">2 seconds</option>
+              <option value="2500">2.5 seconds</option>
+              <option value="3000">3 seconds</option>
+              <option value="3500">3.5 seconds</option>
+              <option value="4000">4 seconds</option>
+              <option value="4500">4.5 seconds</option>
+              <option value="5000">5 seconds</option>
+              <option value="5500">5.5 seconds</option>
+              <option value="6000">6 seconds</option>
+              <option value="6500">6.5 seconds</option>
+              <option value="7000">7 seconds</option>
+              <option value="7500">7.5 seconds</option>
+              <option value="8000">8 seconds</option>
+              <option value="8500">8.5 seconds</option>
+              <option value="9000">9 seconds</option>
+              <option value="9500">9.5 seconds</option>
+              <option value="10000">10 seconds</option>
+            </select>
+
+            <br />
+
+            <button id="cycle-submit" type="button" value="submit">Change Cycle Time</button>
+          </form>
+
+          <hr />
+
           <h3>The Scale</h3>
 
           <ul>
@@ -76,7 +109,7 @@
     <footer>
       <p>This visualization would not be possible without the efforts of the <a target="_blank" href="http://droughtmonitor.unl.edu/">United States Drought Monitor</a>, which has maintained a superb database of drought data since 2000. To learn more about the ongoing drought in California and how you can help, visit <a target="_blank" href="http://ca.gov/drought/">California's State Drought Portal</a>.</p>
 
-      <p>Designed & Built By: <a href="http://www.ceskavich.com/">Billy Ceskavich</a></p>
+      <p>Designed &amp; Built By: <a href="http://www.ceskavich.com/">Billy Ceskavich</a></p>
     </footer>
 
 
@@ -85,38 +118,5 @@
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="static/js/main.js"></script>
-
-    <script>
-      $(function(){
-
-        $("#start").click(function(){
-          setLoop(this.value);
-
-          if (this.value == "pause"){
-            $("#start").html("Play");
-            $("#start").prop("value", "play");
-          }
-          else {
-            $("#start").html("Pause");
-            $("#start").prop("value", "pause");
-          }
-        });
-
-        $('a[href*=#]:not([href=#])').click(function() {
-          if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-            if (target.length) {
-              $('html,body').animate({
-                scrollTop: target.offset().top
-              }, 1000);
-              return false;
-            }
-          }
-        });
-
-      });
-    </script>
-
   </body>
 </html>

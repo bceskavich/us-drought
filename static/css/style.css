@@ -105,7 +105,7 @@ button:hover {
 
 hr {
   border: 1px solid #ddd;
-  margin: 40px 0px;
+  margin: 20px 0px;
 }
 
 .select-area {
@@ -116,7 +116,8 @@ hr {
   width: 50%;
 }
 
-#date-submit {
+#date-submit,
+#cycle-submit {
   font-size: 15px;
   margin-top: 10px;
 }
