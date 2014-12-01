@@ -67,6 +67,7 @@ function update(fileIndex){
 
   function ready(error, us) {
     appendDate(fileIndex);
+    document.querySelector('input[type=range]').value = fileIndex;
 
     var svg = d3.select("#choro")
     svg.select(".counties")

@@ -77,6 +77,41 @@ section div h1 {
   width: 66.6667%;
 }
 
+.choro-container form input,
+#choro-title,
+#start {
+  margin-left: 150px;
+}
+
+.choro-container form input {
+  width: 75%;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 5px;
+  border-radius: 0px;
+  background: #89371c;
+  margin-top: -5px;
+}
+
+#start {
+  margin-top: 20px;
+}
+
 .choro-info {
   width: 30%;
   padding: 0px 20px;
@@ -93,9 +128,9 @@ button {
   border: 1px solid #89371c;
   color: #fff;
   border-radius: 4px;
-  font-size: 20px;
+  font-size: 15px;
   padding: 10px 30px;
-  margin: 0px auto;
+  margin: 10px auto;
 }
 
 button:hover {
@@ -116,11 +151,6 @@ hr {
   width: 50%;
 }
 
-#date-submit,
-#cycle-submit {
-  font-size: 15px;
-  margin-top: 10px;
-}
 
 ul {
   list-style-type: none;
