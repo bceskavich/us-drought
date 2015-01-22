@@ -34,7 +34,9 @@ function initiate(dates){
   var first_date = dates[0];
   queue()
     .defer(d3.json, "static/data/us.json")
-    .defer(d3.json, "static/data/saved/" + first_date + ".json", function(d) { droughtRate.set(d.id, +d.level); })
+    .defer(d3.csv, "static/data/saved/" + first_date + ".csv", function(d) {
+      droughtRate.set(d.id, +d.level);
+    })
     .await(ready);
 
   function ready(error, us) {
@@ -61,11 +63,11 @@ function update(fileIndex, dates){
 
   queue()
     .defer(d3.json, "static/data/us.json")
-    .defer(d3.json, "static/data/saved/" + file + ".json", function(d) { droughtRate.set(d.id, +d.level); })
+    .defer(d3.csv, "static/data/saved/" + date + ".csv", function(d) { droughtRate.set(d.id, +d.level); })
     .await(ready);
 
   function ready(error, us) {
-    appendDate(fileIndex);
+    appendDate(fileIndex, dates);
     document.querySelector('input[type=range]').value = fileIndex;
 
     var svg = d3.select("#choro")
@@ -107,19 +109,21 @@ function appendDate(fileIndex, dates){
   $("#choro-title").html(dateString);
 }
 
-function setLoop(value, count, datesLength){
+function setLoop(value, count, interval, fileNumber, dates){
   intervalCount = count;
   var cycleTime = intervalCount / 1000;
   $("#cycle-time").html(cycleTime);
+
+  console.log(fileNumber);
 
   if (interval) clearInterval(interval);
 
   if (value == "play"){
     interval = setInterval(function(){
-      if (fileNumber >= datesLength){
+      if (fileNumber >= dates.length){
         fileNumber = 0
       }
-      update(fileNumber++);
+      update(fileNumber++, dates);
     }, count);
   }
   else {
@@ -160,12 +164,12 @@ $(function(){
           $("#start").html("Pause");
           $("#start").prop("value", "pause");
         }
-        setLoop("play", intervalCount, datesLength);
+        setLoop("play", intervalCount, interval, fileNumber, dates);
       }
     });
 
     $("#start").click(function(){
-      setLoop(this.value, intervalCount, datesLength);
+      setLoop(this.value, intervalCount, interval, fileNumber, dates);
 
       if (this.value == "pause"){
         $("#start").html("Play");
@@ -178,7 +182,7 @@ $(function(){
     });
 
     $("#cycle-submit").click(function(){
-      setLoop("play", parseInt($('#cycle-time-select').val()), datesLength);
+      setLoop("play", parseInt($('#cycle-time-select').val()), interval, fileNumber, dates);
 
       if ($("#start").val() == "play") {
         $("#start").html("Pause");

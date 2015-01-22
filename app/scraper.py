@@ -120,11 +120,17 @@ def process_drought_data():
         for raw_file in raw_data_files:
             print 'Processing %d of %d raw files.' % (count, len(raw_data_files))
 
+            # opens raw file to read data
             readfile = open(basedir + '/app/static/data/raw/' + raw_file, 'r')
             reader = csv.reader(readfile, delimiter=',')
 
-            # Formats data - cuts out what we don't need
-            data = []
+            # sets up processed file for writing
+            raw_file_name = raw_file.split('.')[0]
+            out_file_name = raw_file_name + '.csv'
+            writefile = open(basedir + '/app/static/data/saved/' + out_file_name, 'w')
+            writer = csv.writer(writefile, delimiter=',')
+            writer.writerow(['id', 'level'])
+
             for line in reader:
                 if line[1] == 'FIPS':
                     pass
@@ -132,31 +138,22 @@ def process_drought_data():
                     fips = int(line[1])
 
                     level = 0
-                    if line[9] > 0:
+                    if float(line[9]) > 0:
                         level = 5
-                    elif line[8] > 0:
+                    elif float(line[8]) > 0:
                         level = 4
-                    elif line[7] > 0:
+                    elif float(line[7]) > 0:
                         level = 3
-                    elif line[6] > 0:
+                    elif float(line[6]) > 0:
                         level = 2
-                    elif line[5] > 0:
+                    elif float(line[5]) > 0:
                         level = 1
 
-                    data.append({'id': fips, 'level': level})
+                    writer.writerow([fips, level])
 
-            readfile.close()
-
-            raw_file_name = raw_file.split('.')[0]
-            json_file = raw_file_name + '.json'
-
-            data = json.dumps(data, indent=1)
-            writefile = open(basedir + '/app/static/data/saved/' + json_file, 'w')
-            writefile.write(data)
             writefile.close()
-
+            readfile.close()
             os.remove(basedir + '/app/static/data/raw/' + raw_file)
-
             count += 1
 
     else:

@@ -1,7 +1,7 @@
-# Drought in America
+## Drought in America
 
-An interactive visualization of drought trends in the United States from the Jan. 2000 to Nov. 2014.
+An interactive visualization of drought trends in the United States from the Jan. 2000 to the present day. Data is courtesy of the [United States Drought Monitor](http://droughtmonitor.unl.edu/) and is updated on a weekly basis.
 
-Created using [D3](http://d3js.org/) and data from the [United States Drought Monitor](http://droughtmonitor.unl.edu/).
+Published with [Flask](http://flask.pocoo.org/); visualization rendered with [D3](http://d3js.org/)
 
-**[Live Here](http://drought.ceskavich.com/)**
+**See It Live:** [drought.ceskavich.com](http://drought.ceskavich.com/)
