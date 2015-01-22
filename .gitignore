@@ -1,7 +1,8 @@
 *.pyc
 *.mo
 *.db
-app/static/data
+app/static/data/saved/*
+app/static/data/raw/*
 test.py
 test.json
 raw

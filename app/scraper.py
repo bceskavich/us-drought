@@ -23,6 +23,9 @@ def check_date(dates):
     # If neither a raw or processed file exists, we haven't collected it
     # Sorts these uncollected files by date for reference
     if data_files or raw_data_files:
+        saved_dates = []
+        raw_dates = []
+
         if data_files:
             saved_dates = [data_file.split('.')[0] for data_file in data_files]
             saved_dates = sorted(saved_dates, reverse=True)
@@ -44,6 +47,10 @@ def check_date(dates):
     return uncrawled_dates
 
 def get_drought_data():
+    """
+    Pulls raw data from the USDM
+    """
+
     # Base URL for the DM homepage & AJAX URL for simulated request
     url = 'http://droughtmonitor.unl.edu/MapsAndData/GISData.aspx'
     ajax_url = 'http://droughtmonitor.unl.edu/Ajax.aspx/ReturnDMWeeks'
@@ -64,6 +71,13 @@ def get_drought_data():
     # Grabs data, a list of valid dates for file reference
     json_data = json.loads(r.text)
     file_dates = json_data['d']
+
+    print 'Writing file dates...'
+
+    # Writes the USDM dates to a file for D3 reference
+    datefile = open(basedir + '/app/static/data/saved/dates.json', 'w')
+    datefile.write(json.dumps(sorted(file_dates), indent=1))
+    datefile.close()
 
     print 'File dates from the USDM:'
     print file_dates
@@ -109,6 +123,7 @@ def process_drought_data():
             readfile = open(basedir + '/app/static/data/raw/' + raw_file, 'r')
             reader = csv.reader(readfile, delimiter=',')
 
+            # Formats data - cuts out what we don't need
             data = []
             for line in reader:
                 if line[1] == 'FIPS':
