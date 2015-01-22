@@ -1,0 +1,8 @@
+*.pyc
+*.mo
+*.db
+app/static/data
+test.py
+test.json
+raw
+env
