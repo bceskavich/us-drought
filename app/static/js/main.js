@@ -26,12 +26,17 @@ var svg = d3.select("#choro").append("svg")
   .attr("width", width)
   .attr("height", height);
 
-// First graph rendered w/ initiate()
-function initiate(dates){
-  // Append date to graphic title
-  appendDate(0, dates);
+var date_list;
+function populateDate(json_data) {
+  date_list = json_data;
+}
 
-  var first_date = dates[0];
+// First graph rendered w/ initiate()
+function initiate(){
+  // Append date to graphic title
+  appendDate(0);
+
+  var first_date = date_list[0];
   queue()
     .defer(d3.json, "static/data/us.json")
     .defer(d3.csv, "static/data/saved/" + first_date + ".csv", function(d) {
@@ -58,8 +63,8 @@ function initiate(dates){
 }
 
 // Graph subsequently updated w/ update()
-function update(fileIndex, dates){
-  var date = dates[fileIndex];
+function update(fileIndex){
+  var date = date_list[fileIndex];
 
   queue()
     .defer(d3.json, "static/data/us.json")
@@ -67,7 +72,7 @@ function update(fileIndex, dates){
     .await(ready);
 
   function ready(error, us) {
-    appendDate(fileIndex, dates);
+    appendDate(fileIndex);
     document.querySelector('input[type=range]').value = fileIndex;
 
     var svg = d3.select("#choro")
@@ -82,9 +87,9 @@ function update(fileIndex, dates){
 }
 
 // Appends date text as graph title upon change
-function appendDate(fileIndex, dates){
+function appendDate(fileIndex){
   // Grab date value and format
-  var date = dates[fileIndex];
+  var date = date_list[fileIndex];
   var splitDate = date.split("");
 
   var year = splitDate[0] + splitDate[1] + splitDate[2] + splitDate[3];
@@ -109,7 +114,7 @@ function appendDate(fileIndex, dates){
   $("#choro-title").html(dateString);
 }
 
-function setLoop(value, count, interval, fileNumber, dates){
+function setLoop(value, count, interval, fileNumber){
   intervalCount = count;
   var cycleTime = intervalCount / 1000;
   $("#cycle-time").html(cycleTime);
@@ -120,10 +125,10 @@ function setLoop(value, count, interval, fileNumber, dates){
 
   if (value == "play"){
     interval = setInterval(function(){
-      if (fileNumber >= dates.length){
+      if (fileNumber >= date_list.length){
         fileNumber = 0
       }
-      update(fileNumber++, dates);
+      update(fileNumber++);
     }, count);
   }
   else {
@@ -137,14 +142,14 @@ $(function(){
   $.getJSON("static/data/saved/dates.json", function(json){
 
     // Loads dates and sets interval values
-    var dates = json;
+    populateDate(json);
     var fileNumber = 1;
-    var datesLength = dates.length;
+    var datesLength = date_list.length;
     var intervalCount = 750;
     var interval = null;
 
     // Initiates graphic
-    initiate(dates);
+    initiate();
 
     var height = $(window).height()
     $(window).scroll(function(){
@@ -164,12 +169,12 @@ $(function(){
           $("#start").html("Pause");
           $("#start").prop("value", "pause");
         }
-        setLoop("play", intervalCount, interval, fileNumber, dates);
+        setLoop("play", intervalCount, interval, fileNumber);
       }
     });
 
     $("#start").click(function(){
-      setLoop(this.value, intervalCount, interval, fileNumber, dates);
+      setLoop(this.value, intervalCount, interval, fileNumber);
 
       if (this.value == "pause"){
         $("#start").html("Play");
@@ -182,7 +187,7 @@ $(function(){
     });
 
     $("#cycle-submit").click(function(){
-      setLoop("play", parseInt($('#cycle-time-select').val()), interval, fileNumber, dates);
+      setLoop("play", parseInt($('#cycle-time-select').val()), interval, fileNumber);
 
       if ($("#start").val() == "play") {
         $("#start").html("Pause");
@@ -197,13 +202,13 @@ $(function(){
       var splitDate = date.split("-");
       var date = splitDate[0] + splitDate[1] + splitDate[2];
 
-      var currDate = dates[0]
+      var currDate = date_list[0]
       var currIndex = 0;
 
       // Loops thru to find closest dataset by date val, and grabs index
       var diff = Math.abs(date - currDate);
-      for (var i = 0; i < dates.length; i++){
-        var newDate = dates[i]
+      for (var i = 0; i < date_list.length; i++){
+        var newDate = date_list[i]
         var newDiff = Math.abs(date - newDate);
         if (newDiff <= diff){
           diff = newDiff;
@@ -218,7 +223,7 @@ $(function(){
       $("#start").prop("value", "play");
 
       // Updates graph w/ closest index, sets new interval starting point index
-      update(currIndex, dates);
+      update(currIndex);
       fileNumber = currIndex;
     }
 
