@@ -35,7 +35,7 @@
 
     <section id="main">
       <div class="choro-container">
-        <h1><span class="brown">Drought</span> Over Time</h1>
+        <h1>The Drought Map</h1>
         <div id="choro">
         </div>
 
@@ -46,7 +46,7 @@
         <button id="start" type="button" value="pause">Pause</button>
       </div>
       <div class="choro-info">
-        <p>The data here ranges from January 2000 to November 2014. Look below the graph to follow the changes over time or pause the cycle. Use the menu below to select a specific date or change the cycle intervals.</p>
+        <p>The data here ranges from January 2000 to the present day, and was scraped from the <a target="_blank" href="http://droughtmonitor.unl.edu/">USDM</a>. Look below the graphic to follow the changes over time or pause the cycle. Use the menu below to select a specific date or change how fast the graphic refreshes.</p>
 
         <hr />
 
@@ -61,7 +61,7 @@
 
           <hr />
 
-          <h3>Cycle Time - <span id="cycle-time"></span> seconds</h3>
+          <h3>Refresh Time - <span id="cycle-time"></span> seconds</h3>
 
           <form>
             <select id="cycle-time-select">
@@ -89,7 +89,7 @@
 
             <br />
 
-            <button id="cycle-submit" type="button" value="submit">Change Cycle Time</button>
+            <button id="cycle-submit" type="button" value="submit">Change Refresh Time</button>
           </form>
 
           <hr />
