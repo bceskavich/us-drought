@@ -1,9 +1,10 @@
-// D3 Chart Setup
+// Sets up scaffolding for the choropleth
+// Responsive sizing for the chart
 var width = $(".choro-container").width() + 100,
     height = 650;
 
+// Scaling and initial D3 object
 var droughtRate = d3.map();
-
 var quantize = d3.scale.quantize()
   .domain([0, 5])
   .range(d3.range(6).map(function(i) {
@@ -22,26 +23,19 @@ var projection = d3.geo.albersUsa()
 var path = d3.geo.path()
   .projection(projection);
 
+// Creates SVG wrapper
 var svg = d3.select("#choro").append("svg")
   .attr("width", width)
   .attr("height", height);
 
-var date_list;
-function populateDate(json_data) {
-  date_list = json_data;
-}
-
 // First graph rendered w/ initiate()
 function initiate(){
-  // Append date to graphic title
   appendDate(0);
+  var file_name = files[0];
 
-  var first_date = date_list[0];
   queue()
     .defer(d3.json, "static/data/us.json")
-    .defer(d3.csv, "static/data/saved/" + first_date + ".csv", function(d) {
-      droughtRate.set(d.id, +d.level);
-    })
+    .defer(d3.csv, "static/data/saved/" + file_name + ".csv", function(d) { droughtRate.set(d.id, +d.level); })
     .await(ready);
 
   function ready(error, us) {
@@ -64,11 +58,11 @@ function initiate(){
 
 // Graph subsequently updated w/ update()
 function update(fileIndex){
-  var date = date_list[fileIndex];
+  var file = files[fileIndex]
 
   queue()
     .defer(d3.json, "static/data/us.json")
-    .defer(d3.csv, "static/data/saved/" + date + ".csv", function(d) { droughtRate.set(d.id, +d.level); })
+    .defer(d3.csv, "static/data/saved/" + file + ".csv", function(d) { droughtRate.set(d.id, +d.level); })
     .await(ready);
 
   function ready(error, us) {
@@ -86,10 +80,43 @@ function update(fileIndex){
   }
 }
 
+// On user input, updates choropleth for closest date in the dataset
+function updateForSelectedDate(){
+  var date = $("#vizdate").val();
+  var splitDate = date.split("-");
+  var date = splitDate[0] + splitDate[1] + splitDate[2];
+
+  var file = files[0];
+  var currDate = file.split(".")[0];
+  var currIndex = 0;
+
+  // Loops thru to find closest dataset by date val, and grabs index
+  var diff = Math.abs(date - currDate);
+  for (var i = 0; i < files.length; i++){
+    var file = files[i];
+    var newDate = file.split(".")[0];
+    var newDiff = Math.abs(date - newDate);
+    if (newDiff <= diff){
+      diff = newDiff;
+      currDate = newDate;
+      currIndex = i;
+    }
+  }
+
+  // Stops interval if running and sets button accordingly
+  clearInterval(interval);
+  $("#start").html("Play");
+  $("#start").prop("value", "play");
+
+  // Updates graph w/ closest index, sets new interval starting point index
+  update(currIndex);
+  fileNumber = currIndex;
+}
+
 // Appends date text as graph title upon change
 function appendDate(fileIndex){
-  // Grab date value and format
-  var date = date_list[fileIndex];
+  var date = files[fileIndex];
+  // var date = file.split("_")[1];
   var splitDate = date.split("");
 
   var year = splitDate[0] + splitDate[1] + splitDate[2] + splitDate[3];
@@ -114,18 +141,20 @@ function appendDate(fileIndex){
   $("#choro-title").html(dateString);
 }
 
-function setLoop(value, count, interval, fileNumber){
+// Sets an interval to loop through the data sets -- intially .75 seconds
+var fileNumber = 1;
+var intervalCount = 750;
+var interval = null;
+function setLoop(value, count){
   intervalCount = count;
   var cycleTime = intervalCount / 1000;
   $("#cycle-time").html(cycleTime);
-
-  console.log(fileNumber);
 
   if (interval) clearInterval(interval);
 
   if (value == "play"){
     interval = setInterval(function(){
-      if (fileNumber >= date_list.length){
+      if (fileNumber >= files.length){
         fileNumber = 0
       }
       update(fileNumber++);
@@ -136,100 +165,71 @@ function setLoop(value, count, interval, fileNumber){
   }
 }
 
+// Creates an in scope array object of accessible data files
+var files;
+function generateFileList(json_data){
+  files = json_data;
+}
+
+
 // Document Ready
 $(function(){
-  // First, grab list of data dates
+  // Grabs date list, which is used to reference data files
   $.getJSON("static/data/saved/dates.json", function(json){
-
-    // Loads dates and sets interval values
-    populateDate(json);
-    var fileNumber = 1;
-    var datesLength = date_list.length;
-    var intervalCount = 750;
-    var interval = null;
-
-    // Initiates graphic
+    console.log(json);
+  }).done(function(json){
+    generateFileList(json);
     initiate();
+  });
 
-    var height = $(window).height()
-    $(window).scroll(function(){
-      var scroll = $(document).scrollTop()
+  // Starts loop on scroll & pauses when past the control box
+  var height = $(window).height()
+  $(window).scroll(function(){
+    var scroll = $(document).scrollTop()
 
-      if (scroll < height){
-        if (typeof interval !== "undefined"){
-          clearInterval(interval);
-          $("#start").html("Play");
-          $("#start").prop("value", "play");
-        }
-      }
-
-      if (scroll > height) {
-        if (typeof interval !== "undefined"){
-          clearInterval(interval);
-          $("#start").html("Pause");
-          $("#start").prop("value", "pause");
-        }
-        setLoop("play", intervalCount, interval, fileNumber);
-      }
-    });
-
-    $("#start").click(function(){
-      setLoop(this.value, intervalCount, interval, fileNumber);
-
-      if (this.value == "pause"){
+    if (scroll < height){
+      if (typeof interval !== "undefined"){
+        clearInterval(interval);
         $("#start").html("Play");
         $("#start").prop("value", "play");
       }
-      else {
-        $("#start").html("Pause");
-        $("#start").prop("value", "pause");
-      }
-    });
-
-    $("#cycle-submit").click(function(){
-      setLoop("play", parseInt($('#cycle-time-select').val()), interval, fileNumber);
-
-      if ($("#start").val() == "play") {
-        $("#start").html("Pause");
-        $("#start").prop("value", "pause");
-      }
-    });
-
-    // On user input, updates choropleth for closest date in the dataset
-    // TODO - dates
-    function updateForSelectedDate(){
-      var date = $("#vizdate").val();
-      var splitDate = date.split("-");
-      var date = splitDate[0] + splitDate[1] + splitDate[2];
-
-      var currDate = date_list[0]
-      var currIndex = 0;
-
-      // Loops thru to find closest dataset by date val, and grabs index
-      var diff = Math.abs(date - currDate);
-      for (var i = 0; i < date_list.length; i++){
-        var newDate = date_list[i]
-        var newDiff = Math.abs(date - newDate);
-        if (newDiff <= diff){
-          diff = newDiff;
-          currDate = newDate;
-          currIndex = i;
-        }
-      }
-
-      // Stops interval if running and sets button accordingly
-      clearInterval(interval);
-      $("#start").html("Play");
-      $("#start").prop("value", "play");
-
-      // Updates graph w/ closest index, sets new interval starting point index
-      update(currIndex);
-      fileNumber = currIndex;
     }
 
+    if (scroll > height) {
+      if (typeof interval !== "undefined"){
+        clearInterval(interval);
+        $("#start").html("Pause");
+        $("#start").prop("value", "pause");
+      }
+      setLoop("play", intervalCount);
+    }
   });
 
-  // Smoothscrolling goodness thanks to CSS tricks
+  // Controls the pause button
+  $("#start").click(function(){
+    setLoop(this.value, intervalCount);
+
+    if (this.value == "pause"){
+      $("#start").html("Play");
+      $("#start").prop("value", "play");
+    }
+    else {
+      $("#start").html("Pause");
+      $("#start").prop("value", "pause");
+    }
+  });
+
+  // Controls the cycle time submit button
+  $("#cycle-submit").click(function(){
+    setLoop("play", parseInt($('#cycle-time-select').val()));
+
+    if ($("#start").val() == "play") {
+      $("#start").html("Pause");
+      $("#start").prop("value", "pause");
+    }
+  });
+
+  // Smooth scrolling thanks to CSS tricks
   $('a[href*=#]:not([href=#])').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       var target = $(this.hash);
