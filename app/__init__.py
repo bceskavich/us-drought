@@ -13,7 +13,11 @@ from app import scraper
 @app.route('/index')
 def index():
     # Calls the two scraper functions to scrape and process new data
-    scraper.get_drought_data()
+    try:
+        scraper.get_drought_data()
+    except Exception as e:
+        print 'Scraping failed due to exception: %s' % e
+
     scraper.process_drought_data()
 
     # Gets length of date list for timeline bar
